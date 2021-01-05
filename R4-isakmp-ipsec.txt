@@ -1,0 +1,46 @@
+1. Create the GRE tunnel
+
+R4:
+
+interface tunnel 1
+ip address 192.168.0.2 255.255.255.252
+tunnel source 198.51.100.2 (g0/0)
+tunnel destination 192.0.2.1
+
+
+2. Create the IKE phase 1 policy (ISAKMP):
+
+conf t
+crypto isakmp policy 10
+encryption aes
+authentication pre-share
+group 2 
+exit
+crypto isakmp key kevinskey address 0.0.0.0 0.0.0.0
+
+3. Create the IPsec transform set for IKE phase 2:
+
+crypto ipsec transform-set KWTRAIN esp-aes esp-sha-hmac
+mode transport
+exit
+
+4. specify interesting traffic:
+
+ip access-list extended GRE-IN-IPSEC
+permit gre any any
+exit
+
+5. Create a crypto map:
+
+crypto map VPN 10 ipsec-isakmp
+match address GRE-IN-IPSEC
+set transform-set KWTRAIN
+set peer 192.0.2.1
+
+5. Apply the crypto map to a interface:
+
+interface e0/0
+crypto map VPN
+
+Verifying:
+show crypto isakmp sa
