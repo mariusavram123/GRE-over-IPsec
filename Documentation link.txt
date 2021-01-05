@@ -1,0 +1,3 @@
+This is the Cisco documentation for GRE over IPsec tunnel configuration and guidelines:
+
+https://www.cisco.com/c/en/us/td/docs/solutions/Enterprise/WAN_and_MAN/P2P_GRE_IPSec/P2P_GRE/2_p2pGRE_Phase2.html
